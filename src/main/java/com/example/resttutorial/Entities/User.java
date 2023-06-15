@@ -1,5 +1,6 @@
 package com.example.resttutorial.Entities;
 
+import com.example.resttutorial.Components.ERole;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +13,15 @@ public class User {
     private String username;
     private String password;
 
-    public User(String username, String password){
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
+
+    public User(String username, String password, ERole role){
         this.username = username;
         this.password = password;
+        this.role = new Role(role);
     }
 
     public User() {}
@@ -41,5 +48,13 @@ public class User {
 
     public void setPassword(String password){
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(ERole role){
+        this.role = new Role(role);
     }
 }

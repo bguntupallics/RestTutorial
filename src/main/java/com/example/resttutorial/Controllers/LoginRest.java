@@ -1,9 +1,9 @@
 package com.example.resttutorial.Controllers;
 
-import com.example.resttutorial.Entities.Employee;
+import com.example.resttutorial.Components.ERole;
 import com.example.resttutorial.Entities.User;
 import com.example.resttutorial.Exceptions.UserNotFoundException;
-import com.example.resttutorial.Repositories.EmployeeRepository;
+import com.example.resttutorial.Repositories.RoleRepository;
 import com.example.resttutorial.Repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,40 +14,42 @@ import java.util.List;
 @RestController
 @RequestMapping("/login")
 public class LoginRest {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public LoginRest(UserRepository userRepository) {
-        this.repository = userRepository;
+    public LoginRest(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/users")
     public List<String> allUsers(){
-        List<User> users =  repository.findAll();
+        List<User> users =  userRepository.findAll();
         ArrayList<String> usernames = new ArrayList<>();
         for (User user: users){
-            usernames.add(user.getUsername());
+            usernames.add(user.getUsername() + " role: " + user.getRole());
         }
         return usernames;
     }
 
     @PostMapping("/validate")
-    public String login(@RequestBody User user){
+    public boolean login(@RequestBody User user){
         try {
-            User to_validate = repository.findByUsername(user.getUsername()).orElseThrow(UserNotFoundException::new);
+            User to_validate = userRepository.findByUsername(user.getUsername()).orElseThrow(UserNotFoundException::new);
             if (to_validate.getPassword().equals(user.getPassword())) {
-                return "true";
+                return true;
             } else {
-                return "false";
+                return false;
             }
         } catch (UserNotFoundException e){
-            return "false";
+            return false;
         }
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user){
-        User to_add = new User(user.getUsername(), user.getPassword());
-        repository.save(to_add);
+        User to_add = new User(user.getUsername(), user.getPassword(), ERole.ROLE_USER);
+        userRepository.save(to_add);
         return ResponseEntity.ok(to_add);
     }
 }
