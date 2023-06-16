@@ -1,6 +1,8 @@
 package com.example.resttutorial.Controllers;
 
 import com.example.resttutorial.Components.ERole;
+import com.example.resttutorial.Components.UserInfo;
+import com.example.resttutorial.Entities.Role;
 import com.example.resttutorial.Entities.User;
 import com.example.resttutorial.Exceptions.UserNotFoundException;
 import com.example.resttutorial.Repositories.RoleRepository;
@@ -33,7 +35,7 @@ public class LoginRest {
     }
 
     @PostMapping("/validate")
-    public boolean login(@RequestBody User user){
+    public boolean login(@RequestBody UserInfo user){
         try {
             User to_validate = userRepository.findByUsername(user.getUsername()).orElseThrow(UserNotFoundException::new);
             if (to_validate.getPassword().equals(user.getPassword())) {
@@ -47,9 +49,15 @@ public class LoginRest {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user){
-        User to_add = new User(user.getUsername(), user.getPassword(), ERole.ROLE_USER);
+    public ResponseEntity<User> register(@RequestBody UserInfo user){
+        User to_add = new User(user.getUsername(), user.getPassword());
+        to_add.setRole(roleRepository.findByRole(ERole.ROLE_USER).orElseThrow(RuntimeException::new));
         userRepository.save(to_add);
         return ResponseEntity.ok(to_add);
+    }
+
+    @GetMapping("/roles")
+    public List<Role> allRoles(){
+        return roleRepository.findAll();
     }
 }
