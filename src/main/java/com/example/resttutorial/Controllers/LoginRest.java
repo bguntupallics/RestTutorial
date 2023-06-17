@@ -2,6 +2,7 @@ package com.example.resttutorial.Controllers;
 
 import com.example.resttutorial.Components.ERole;
 import com.example.resttutorial.Components.UserInfo;
+import com.example.resttutorial.Components.UserPrint;
 import com.example.resttutorial.Entities.Role;
 import com.example.resttutorial.Entities.User;
 import com.example.resttutorial.Exceptions.UserNotFoundException;
@@ -25,11 +26,11 @@ public class LoginRest {
     }
 
     @GetMapping("/users")
-    public List<String> allUsers(){
+    public List<UserPrint> allUsers(){
         List<User> users =  userRepository.findAll();
-        ArrayList<String> usernames = new ArrayList<>();
+        ArrayList<UserPrint> usernames = new ArrayList<>();
         for (User user: users){
-            usernames.add(user.getUsername() + " role: " + user.getRole());
+            usernames.add(new UserPrint(user.getUsername(), user.getRole().getRole()));
         }
         return usernames;
     }
