@@ -1,8 +1,8 @@
 package com.example.resttutorial.Entities;
 
 import com.example.resttutorial.Components.ERole;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity

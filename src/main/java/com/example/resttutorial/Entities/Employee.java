@@ -1,6 +1,6 @@
 package com.example.resttutorial.Entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "employees")

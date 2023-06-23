@@ -1,7 +1,8 @@
 package com.example.resttutorial.Entities;
 
 import com.example.resttutorial.Components.ERole;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
