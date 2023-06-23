@@ -1,15 +1,23 @@
 package com.example.resttutorial.Controllers;
+import com.example.resttutorial.Components.GPTResponse;
 import com.example.resttutorial.Entities.Employee;
 import com.example.resttutorial.Repositories.EmployeeRepository;
+import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class TestRest {
 
+    @Autowired
+    RestTemplate restTemplate;
     private final EmployeeRepository repository;
 
     public TestRest(EmployeeRepository employeeRepository) {
@@ -64,4 +72,21 @@ public class TestRest {
         return "Done";
     }
 
+    @PostMapping("/chat")
+    public String chat(@RequestBody String prompt){
+        String apiKey = "KEY HERE";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject body = new JSONObject();
+        body.put("model", "gpt-3.5-turbo");
+        HashMap<String, String> messages = new HashMap<>();
+        messages.put("role", "system");
+        messages.put("content", prompt);
+        body.put("messages", new HashMap[]{messages});
+        HttpEntity<String> entity = new HttpEntity<String>(body.toString(), headers);
+        ResponseEntity<GPTResponse> response = restTemplate.exchange("https://api.openai.com/v1/chat/completions", HttpMethod.POST, entity, GPTResponse.class);
+        return response.getBody().getChoices().get(0).getMessage().getContent();
+    }
 }

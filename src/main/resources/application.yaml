@@ -1,7 +1,6 @@
 spring:
   datasource:
-#    url: jdbc:h2:mem:mydb
-    url: jdbc:mysql://db:3306/test_sql #jdbc:mysql://${MYSQL_HOST:localhost}:6033/test_sql
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:6033/test_sql #jdbc:mysql://db:3306/test_sql
     username: bguntupalli
     password: password
     driverClassName: com.mysql.cj.jdbc.Driver
