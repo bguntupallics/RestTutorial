@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 
+
+@CrossOrigin(origins = "http://localhost:8000")
 @RestController
 @RequestMapping("/api")
 public class TestRest {

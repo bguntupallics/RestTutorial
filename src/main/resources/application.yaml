@@ -1,4 +1,12 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:
+    user:
+      password: password
+      name: bguntupalli
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:6033/test_sql #jdbc:mysql://db:3306/test_sql
     username: bguntupalli
