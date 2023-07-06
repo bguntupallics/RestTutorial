@@ -1,11 +1,13 @@
 package com.example.resttutorial.Exceptions;
 
+import org.apache.catalina.authenticator.BasicAuthenticator;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -49,5 +51,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
     public ResponseEntity<ErrorMessage> usernameExists(){
         return new ResponseEntity<>(new ErrorMessage("Username already Exists"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<ErrorMessage> invalidAPIToken(){
+        return new ResponseEntity<>(new ErrorMessage("Invalid API Token"), HttpStatus.UNAUTHORIZED);
     }
 }
